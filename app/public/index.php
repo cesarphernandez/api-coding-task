@@ -1,7 +1,16 @@
 <?php
 
-header('Content-type: application/json');
+declare(strict_types=1);
 
-echo json_encode([
-    "message" => "Hola Mundo"
-]);
+use App\bootstrap\BootstrapApp;
+use Slim\Factory\AppFactory;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$container = BootstrapApp::getInstance();
+AppFactory::setContainer($container);
+$app = AppFactory::create();
+
+require __DIR__ . '/../src/routes.php';
+
+$app->run();
