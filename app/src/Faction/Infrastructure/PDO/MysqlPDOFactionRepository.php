@@ -2,6 +2,7 @@
 
 namespace App\Faction\Infrastructure\PDO;
 
+use App\Faction\Domain\Exceptions\FactionNotCreatedException;
 use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use App\Faction\Domain\Faction;
 use App\Faction\Domain\Factory\FactionFactory;
@@ -55,9 +56,24 @@ class MysqlPDOFactionRepository implements FactionRepositoryInterface
         return $factions;
     }
 
+    /**
+     * @throws FactionNotCreatedException
+     */
     public function createFaction(Faction $faction): Faction
     {
-        // TODO: Implement createFaction() method.
+        $query = "INSERT INTO factions (faction_name, description) VALUES (:name, :description)";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([
+            'name' => $faction->getName(),
+            'description' => $faction->getDescription()
+        ]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new FactionNotCreatedException('Faction not created');
+        }
+
+        $faction->setId((int)$this->connection->lastInsertId());
+        return $faction;
     }
 
     public function updateFaction(int $id, Faction $faction): Faction

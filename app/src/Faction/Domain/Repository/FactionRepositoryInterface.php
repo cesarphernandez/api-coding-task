@@ -2,6 +2,7 @@
 
 namespace App\Faction\Domain\Repository;
 
+use App\Faction\Domain\Exceptions\FactionNotCreatedException;
 use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use App\Faction\Domain\Faction;
 
@@ -19,6 +20,9 @@ interface FactionRepositoryInterface
      */
     public function getFactions(): array;
 
+    /**
+     * @throws FactionNotCreatedException
+     */
     public function createFaction(Faction $faction): Faction;
 
     public function updateFaction(int $id, Faction $faction): Faction;

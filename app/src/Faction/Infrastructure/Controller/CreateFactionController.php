@@ -2,18 +2,24 @@
 
 namespace App\Faction\Infrastructure\Controller;
 
+use App\common\Application\Builder\JsonResponseBuilder;
 use App\common\Infrastructure\Controller\BaseController;
+use App\Faction\Application\Services\FactionService;
+use App\Faction\Domain\Exceptions\FactionNotCreatedException;
 use App\Faction\Infrastructure\Validator\CreateFactionValidator;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Exception;
 
 class CreateFactionController extends BaseController
 {
 
     private CreateFactionValidator $validator;
 
-    public function __construct()
+    public function __construct(
+        private FactionService $factionService,
+    )
     {
         $this->validator = new CreateFactionValidator();
     }
@@ -22,22 +28,18 @@ class CreateFactionController extends BaseController
     {
         try {
             $dto = $this->validator->validate($request);
+            $created = $this->factionService->createFaction($dto);
 
-            return $this->JsonResponse([
-                'status' => 'success',
-                'data' => [
-                    'faction_name' => $dto->getName(),
-                    'description' => $dto->getDescription(),
-                ],
-            ], $response, 201);
+            return JsonResponseBuilder::successRequest('success',[
+                'data' => $created->toArray()
+            ]);
+        } catch (FactionNotCreatedException $e) {
+            return JsonResponseBuilder::badRequest($e->getMessage());
         } catch (NestedValidationException $e) {
-            $response->getBody()->write(json_encode([
-                'status' => 'error',
-                'message' => $e->getMessages()
-            ]));
-
-            return $response->withStatus(422)
-                ->withHeader('Content-Type', 'application/json');
+            return JsonResponseBuilder::unprocessableEntityRequest($e->getMessage());
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+            return JsonResponseBuilder::internalServerErrorRequest('Internal server error');
         }
     }
 

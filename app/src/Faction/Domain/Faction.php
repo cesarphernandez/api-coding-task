@@ -7,6 +7,7 @@ class Faction
     public function __construct(
         private string $name,
         private string $description,
+        private int $id = 0,
     ) {
     }
 
@@ -20,11 +21,22 @@ class Faction
         return $this->description;
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function toArray(): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description
+            'description' => $this->description,
         ];
     }
 

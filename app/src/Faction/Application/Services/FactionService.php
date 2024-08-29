@@ -3,6 +3,7 @@
 namespace App\Faction\Application\Services;
 
 use App\Faction\Application\DTO\CreateFactionDTO;
+use App\Faction\Domain\Exceptions\FactionNotCreatedException;
 use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use App\Faction\Domain\Faction;
 use App\Faction\Domain\Factory\FactionFactory;
@@ -39,6 +40,9 @@ class FactionService
         return $data;
     }
 
+    /**
+     * @throws FactionNotCreatedException
+     */
     public function createFaction(CreateFactionDTO $factionDTO): Faction
     {
         $faction = $this->factionFromDTO($factionDTO);

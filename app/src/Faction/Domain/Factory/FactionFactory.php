@@ -10,7 +10,8 @@ class FactionFactory
     {
         return new Faction(
             $faction['faction_name'],
-            $faction['description']
+            $faction['description'],
+            $faction['id'] ?? 0
         );
     }
 
