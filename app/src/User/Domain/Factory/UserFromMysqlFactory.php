@@ -12,7 +12,7 @@ class UserFromMysqlFactory
         return new User(
             $user['email'],
             $user['password'],
-            explode(',', $user['roles'])
+            json_decode($user['roles'], true)
         );
     }
 

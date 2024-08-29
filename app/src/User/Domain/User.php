@@ -27,6 +27,11 @@ class User
         return in_array($role, $this->roles);
     }
 
+    public function hasRoles(array $roles): bool
+    {
+        return count(array_intersect($roles, $this->roles)) > 0;
+    }
+
     public function authenticate(string $password): bool
     {
         return md5($password) === $this->password;

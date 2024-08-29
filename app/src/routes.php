@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\User\Infrastructure\Middleware\AuthorizationMiddleware;
 use Slim\App;
 
 use Slim\Exception\HttpUnauthorizedException;
@@ -22,18 +23,18 @@ use App\common\Application\Builder\JsonResponseBuilder;
 try {
     $app->group('/api', function (RouteCollectorProxy $group)  {
         $group->post('/login', LoginUserController::class);
-
         $authenticatorMiddleware = $this->get(AuthenticatorMiddleware::class);
 
-        $group->group('/factions', function (RouteCollectorProxy $group) {
-            $group->get('/{id}', ShowFactionController::class);
-            $group->get('', ListFactionController::class);
+        $group->group('/factions', function (RouteCollectorProxy $factionsGroup) {
+            $factionsGroup->get('/{id}', ShowFactionController::class);
+            $factionsGroup->get('', ListFactionController::class);
 
+            $factionsGroup->group('', function (RouteCollectorProxy $factionsGroupAuthorization) {
+                $factionsGroupAuthorization->post('', CreateFactionController::class);
+                $factionsGroupAuthorization->delete('/{id}', DeleteFactionController::class);
+            })->add(new AuthorizationMiddleware(['admin']));
 
-            $group->post('', CreateFactionController::class);
-            $group->delete('/{id}', DeleteFactionController::class);
-        })
-            ->add($authenticatorMiddleware);
+        })->add($authenticatorMiddleware);
     });
 } catch (HttpUnauthorizedException $e) {
     return JsonResponseBuilder::badRequest('Unauthorized request');
