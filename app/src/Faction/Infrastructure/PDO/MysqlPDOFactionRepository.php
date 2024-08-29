@@ -34,9 +34,25 @@ class MysqlPDOFactionRepository implements FactionRepositoryInterface
         return $this->factory->create($result);
     }
 
+    /**
+     * @return array<string, Faction>
+     * @throws FactionNotFoundException
+     */
     public function getFactions(): array
     {
-        // TODO: Implement getFactions() method.
+        $query = "SELECT * FROM factions";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+
+        $factions = [];
+        while ($row = $stmt->fetch()) {
+            $factions[] = $this->factory->create($row);
+        }
+        if (empty($factions)) {
+            throw FactionNotFoundException::fromId(0);
+        }
+
+        return $factions;
     }
 
     public function createFaction(Faction $faction): Faction

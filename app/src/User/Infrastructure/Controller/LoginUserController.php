@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Controller;
 
+use App\common\Application\Builder\JsonResponseBuilder;
 use App\common\Infrastructure\Controller\BaseController;
 use App\User\Application\Services\UserService;
 use App\User\Domain\Exception\UserNotAuthenticate;
@@ -32,28 +33,17 @@ class LoginUserController extends BaseController
             $dto = $this->validator->validate($request);
             $token = $this->userService->login($dto);
 
-            return $this->JsonResponse([
-                'status' => 'success',
-                'token' => $token,
-            ], $response, 201);
-            
-
+            return JsonResponseBuilder::successRequest('success',
+                [
+                    'token' => $token
+                ]
+            );
         } catch (NestedValidationException $e) {
-            $response->getBody()->write(json_encode([
-                'status' => 'error',
-                'message' => $e->getMessages()
-            ]));
-
-            return $response->withStatus(422)
-                ->withHeader('Content-Type', 'application/json');
+            return JsonResponseBuilder::unprocessableEntityRequest($e->getMessage());
         } catch (ContainerExceptionInterface  | NotFoundExceptionInterface $e) {
-            return $this->JsonResponse([
-                'message' => 'Service unavailable',
-            ], $response, 503);
+            return JsonResponseBuilder::unavailableRequest('Service unavailable');
         } catch (UserNotAuthenticate | UserNotFoundException $e) {
-            return $this->JsonResponse([
-                'message' => 'Bad credentials',
-            ], $response, 401);
+            return JsonResponseBuilder::notFoundRequest($e->getMessage());
         }
     }
 

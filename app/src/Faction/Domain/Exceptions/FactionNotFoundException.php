@@ -14,4 +14,9 @@ class FactionNotFoundException extends Exception
 
     }
 
+    public static function fromAll(): self
+    {
+        return new self('Factions not found');
+    }
+
 }

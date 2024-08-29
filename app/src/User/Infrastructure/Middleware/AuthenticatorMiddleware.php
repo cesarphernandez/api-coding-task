@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace App\User\Infrastructure\Middleware;
 
+use App\common\Application\Builder\JsonResponseBuilder;
 use App\User\Domain\AuthenticatorInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,12 +21,12 @@ class AuthenticatorMiddleware
     {
         $authHeader = $request->getHeaderLine('Authorization');
         if (!$authHeader) {
-            throw new HttpUnauthorizedException($request, 'Token not found');
+            return JsonResponseBuilder::unauthorizedRequest('Unauthorized request');
         }
         $token = str_replace('Bearer ', '', $authHeader);
         $user = $this->authenticator->decode($token);
         if (!$user) {
-            throw new HttpUnauthorizedException($request, 'Invalid token');
+            return JsonResponseBuilder::unauthorizedRequest('Unauthorized request');
         }
 
         $request = $request->withAttribute('user', $user);

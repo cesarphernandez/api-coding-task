@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\bootstrap\BootstrapApp;
 use Slim\Factory\AppFactory;
+use Slim\Exception\HttpNotFoundException;
+use App\common\Application\Builder\JsonResponseBuilder;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -13,4 +15,8 @@ $app = AppFactory::create();
 
 require __DIR__ . '/../src/routes.php';
 
-$app->run();
+try {
+    $app->run();
+} catch (HttpNotFoundException $e) {
+    JsonResponseBuilder::baseResponse(404, 'Not Found');
+}

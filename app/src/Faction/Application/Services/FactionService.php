@@ -3,6 +3,7 @@
 namespace App\Faction\Application\Services;
 
 use App\Faction\Application\DTO\CreateFactionDTO;
+use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use App\Faction\Domain\Faction;
 use App\Faction\Domain\Factory\FactionFactory;
 use App\Faction\Domain\Repository\FactionRepositoryInterface;
@@ -17,9 +18,25 @@ class FactionService
         $this->factionFactory = new FactionFactory();
     }
 
+    /**
+     * @throws FactionNotFoundException
+     */
     public function getFaction(int $id): Faction
     {
         return $this->factionRepository->getFaction($id);
+    }
+
+    /**
+     * @throws FactionNotFoundException
+     */
+    public function getFactions(): array
+    {
+        $factions = $this->factionRepository->getFactions();
+        $data = [];
+        foreach ($factions as $faction) {
+            $data[] = $faction->toArray();
+        }
+        return $data;
     }
 
     public function createFaction(CreateFactionDTO $factionDTO): Faction

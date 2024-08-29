@@ -2,6 +2,7 @@
 
 namespace App\Faction\Infrastructure\Controller;
 
+use App\common\Application\Builder\JsonResponseBuilder;
 use App\common\Infrastructure\Controller\BaseController;
 use App\common\Infrastructure\Validator\IdValidator;
 use App\Faction\Application\Services\FactionService;
@@ -9,6 +10,7 @@ use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Exception;
 
 class ShowFactionController extends BaseController
 {
@@ -26,22 +28,15 @@ class ShowFactionController extends BaseController
             $dto = $this->validator->validate($args);
 
             $faction = $this->factionService->getFaction($dto->getId());
-            return $this->JsonResponse([
-                'status' => 'success',
-                'data' => $faction->toArray(),
-            ], $response, 201);
+            return JsonResponseBuilder::successRequest('success',[
+                'data' => $faction->toArray()
+            ]);
         } catch (NestedValidationException $e) {
-            $response->getBody()->write(json_encode([
-                'status' => 'error',
-                'message' => $e->getMessages()
-            ]));
-
-            return $response->withStatus(422)
-                ->withHeader('Content-Type', 'application/json');
+            return JsonResponseBuilder::unavailableRequest('Service unavailable');
         } catch (FactionNotFoundException $e) {
-            return $this->JsonResponse([
-                'message' => 'Faction not found',
-            ], $response, 404);
+            return JsonResponseBuilder::notFoundRequest($e->getMessage());
+        } catch (Exception) {
+            return JsonResponseBuilder::internalServerErrorRequest('Internal server error');
         }
     }
 

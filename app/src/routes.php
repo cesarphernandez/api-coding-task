@@ -26,11 +26,12 @@ try {
         $authenticatorMiddleware = $this->get(AuthenticatorMiddleware::class);
 
         $group->group('/factions', function (RouteCollectorProxy $group) {
+            $group->get('/{id}', ShowFactionController::class);
+            $group->get('', ListFactionController::class);
+
 
             $group->post('', CreateFactionController::class);
             $group->delete('/{id}', DeleteFactionController::class);
-            $group->get('', ListFactionController::class);
-            $group->get('/{id}', ShowFactionController::class);
         })
             ->add($authenticatorMiddleware);
     });
