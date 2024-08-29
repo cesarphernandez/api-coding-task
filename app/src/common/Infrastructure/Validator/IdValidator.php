@@ -3,7 +3,6 @@
 namespace App\common\Infrastructure\Validator;
 
 use App\common\Application\IdDTO;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Respect\Validation\Validator;
 
 class IdValidator

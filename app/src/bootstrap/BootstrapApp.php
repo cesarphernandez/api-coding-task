@@ -22,7 +22,7 @@ class BootstrapApp
         $container = new Container(require $config);
         $container->set('config', $config);
 
-        require_once __DIR__ . '/provider.php';
+        require_once __DIR__ . '/providers.php';
 
         return $container;
     }

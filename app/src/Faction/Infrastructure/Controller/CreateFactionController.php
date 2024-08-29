@@ -36,9 +36,10 @@ class CreateFactionController extends BaseController
         } catch (FactionNotCreatedException $e) {
             return JsonResponseBuilder::badRequest($e->getMessage());
         } catch (NestedValidationException $e) {
-            return JsonResponseBuilder::unprocessableEntityRequest($e->getMessage());
-        } catch (Exception $e) {
-            var_dump($e->getMessage());
+            return JsonResponseBuilder::badRequest('Error', [
+                'info' => $e->getMessages()
+            ]);
+        } catch (Exception) {
             return JsonResponseBuilder::internalServerErrorRequest('Internal server error');
         }
     }

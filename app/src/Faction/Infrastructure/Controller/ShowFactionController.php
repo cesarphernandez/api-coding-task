@@ -5,6 +5,7 @@ namespace App\Faction\Infrastructure\Controller;
 use App\common\Application\Builder\JsonResponseBuilder;
 use App\common\Infrastructure\Controller\BaseController;
 use App\common\Infrastructure\Validator\IdValidator;
+use App\Faction\Application\Interfaces\FactionServiceInterface;
 use App\Faction\Application\Services\FactionService;
 use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use Respect\Validation\Exceptions\NestedValidationException;
@@ -17,7 +18,7 @@ class ShowFactionController extends BaseController
     private IdValidator $validator;
 
     public function __construct(
-        private FactionService $factionService,
+        private FactionServiceInterface $factionService,
     ){
         $this->validator = new IdValidator();
     }
@@ -32,7 +33,9 @@ class ShowFactionController extends BaseController
                 'data' => $faction->toArray()
             ]);
         } catch (NestedValidationException $e) {
-            return JsonResponseBuilder::unavailableRequest('Service unavailable');
+            return JsonResponseBuilder::badRequest('Error', [
+                'info' => $e->getMessages()
+            ]);
         } catch (FactionNotFoundException $e) {
             return JsonResponseBuilder::notFoundRequest($e->getMessage());
         } catch (Exception) {

@@ -25,7 +25,10 @@ interface FactionRepositoryInterface
      */
     public function createFaction(Faction $faction): Faction;
 
-    public function updateFaction(int $id, Faction $faction): Faction;
+    /**
+     * @throws FactionNotFoundException
+     */
+    public function updateFaction(int $id, array $faction): Faction;
 
     public function deleteFaction(int $id): bool;
 

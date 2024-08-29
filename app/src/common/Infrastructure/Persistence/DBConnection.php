@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\common\Infrastructure\Persistence;
 use DI\Container;
 use PDO;

@@ -76,13 +76,30 @@ class MysqlPDOFactionRepository implements FactionRepositoryInterface
         return $faction;
     }
 
-    public function updateFaction(int $id, Faction $faction): Faction
+    /**
+     * @throws FactionNotFoundException
+     */
+    public function updateFaction(int $id, array $faction): Faction
     {
-        // TODO: Implement updateFaction() method.
+        $currentFaction = $this->getFaction($id);
+        $query = "UPDATE factions SET faction_name = :name, description = :description WHERE id = :id";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([
+            'name' => $faction['faction_name'] ?? $currentFaction->getName(),
+            'description' => $faction['description'] ?? $currentFaction->getDescription(),
+            'id' => $id
+        ]);
+
+        return $this->getFaction($id);
+
     }
 
     public function deleteFaction(int $id): bool
     {
-        // TODO: Implement deleteFaction() method.
+        $query = "DELETE FROM factions WHERE id = :id";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
     }
 }

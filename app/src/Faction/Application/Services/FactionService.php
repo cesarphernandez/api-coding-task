@@ -3,14 +3,15 @@
 namespace App\Faction\Application\Services;
 
 use App\Faction\Application\DTO\CreateFactionDTO;
+use App\Faction\Application\DTO\PartialFactionDTO;
+use App\Faction\Application\Interfaces\FactionServiceInterface;
 use App\Faction\Domain\Exceptions\FactionNotCreatedException;
 use App\Faction\Domain\Exceptions\FactionNotFoundException;
 use App\Faction\Domain\Faction;
 use App\Faction\Domain\Factory\FactionFactory;
 use App\Faction\Domain\Repository\FactionRepositoryInterface;
-use function DI\create;
 
-class FactionService
+class FactionService  implements FactionServiceInterface
 {
     private FactionFactory $factionFactory;
     public function __construct(
@@ -50,9 +51,15 @@ class FactionService
         return $this->factionRepository->createFaction($faction);
     }
 
-    public function updateFaction(int $id, array $faction): Faction
+    /**
+     * @throws FactionNotFoundException
+     */
+    public function updateFaction(int $id, PartialFactionDTO $faction): Faction
     {
-        return $this->factionRepository->updateFaction($id, $faction);
+        return $this->factionRepository->updateFaction($id, [
+            'faction_name' => $faction->getName(),
+            'description' => $faction->getDescription()
+        ]);
     }
 
     public function deleteFaction(int $id): bool

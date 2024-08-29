@@ -21,13 +21,11 @@ return [
             'logErrors' => true,
             'logErrorDetails' => true,
         ],
-
-        'cache' => [
-            'filesystem_adapter' => [
-                'namespace' => '',
-                'default_life_time' => 3600,  //1 hour (time in seconds)
-                'directory' => APP_ROOT.'/var/cache/dev'
-            ]
+        'redis' => [
+            'host' => 'redis',
+            'port' => 6379,
+            'scheme' => 'tcp',
+            'ttl' => 3600
         ]
     ]
 ];

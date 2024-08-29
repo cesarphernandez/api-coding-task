@@ -16,7 +16,8 @@
     "slim/psr7": "^1.6",
     "respect/validation": "^2.3",
     "firebase/php-jwt": "^6.10",
-    "php-di/php-di": "^7.0"
+    "php-di/php-di": "^7.0",
+    "predis/predis": "^2.2"
   },
   "autoload": {
     "psr-4": {

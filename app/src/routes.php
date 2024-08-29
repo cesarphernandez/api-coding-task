@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Faction\Infrastructure\Controller\UpdateFactionController;
 use App\User\Infrastructure\Middleware\AuthorizationMiddleware;
 use Slim\App;
 
@@ -26,12 +27,13 @@ try {
         $authenticatorMiddleware = $this->get(AuthenticatorMiddleware::class);
 
         $group->group('/factions', function (RouteCollectorProxy $factionsGroup) {
-            $factionsGroup->get('/{id}', ShowFactionController::class);
+            $factionsGroup->get('/{id:[0-9]+}', ShowFactionController::class);
             $factionsGroup->get('', ListFactionController::class);
 
             $factionsGroup->group('', function (RouteCollectorProxy $factionsGroupAuthorization) {
                 $factionsGroupAuthorization->post('', CreateFactionController::class);
-                $factionsGroupAuthorization->delete('/{id}', DeleteFactionController::class);
+                $factionsGroupAuthorization->put('/{id:[0-9]+}', UpdateFactionController::class);
+                $factionsGroupAuthorization->delete('/{id:[0-9]+}', DeleteFactionController::class);
             })->add(new AuthorizationMiddleware(['admin']));
 
         })->add($authenticatorMiddleware);
