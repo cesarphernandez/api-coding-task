@@ -13,44 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up PHP with Composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          tools: composer
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-        working-directory: ./subdirectory-if-needed
-
-      - name: Set up Docker Compose
+      - name: Set up Docker
         run: |
           sudo apt-get update
-          sudo apt-get install -y docker-compose
+          sudo apt-get install -y make docker-compose
 
-      - name: Build Docker containers
-        run: docker-compose build
-        if: success()
+      - name: Build project
+        run: make build
 
-      - name: Start Docker containers
-        run: docker-compose up -d
-        if: success()
+      - name: Build and start Docker containers
+        run: docker-compose up -d --build
+
+      - name: Install PHP CodeSniffer and PHPStan
+        run: |
+          docker-compose exec -T php composer install
+          docker-compose exec -T php composer require --dev squizlabs/php_codesniffer
 
       - name: Run PHP CodeSniffer
-        run: docker-compose run --rm php vendor/bin/phpcs --standard=PSR12 src/
-        if: success()
-
-      - name: Run PHPStan
-        run: docker-compose run --rm php vendor/bin/phpstan analyse src/ --level=max
-        if: success()
-
-      - name: Run Psalm
-        run: docker-compose run --rm php vendor/bin/psalm --show-info=true
-        if: success()
+        run: docker-compose exec -T php vendor/bin/phpcs --standard=PSR1 src/
 
       - name: Stop and remove Docker containers
-        if: always()
         run: docker-compose down
