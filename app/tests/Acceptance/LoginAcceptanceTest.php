@@ -8,11 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 class LoginAcceptanceTest extends TestCase
 {
+    protected Client $client;
+
+    protected function setUp(): void
+    {
+        $this->client = new Client([
+            'base_uri' => 'http://localhost:8080',
+            'http_errors' => false,
+        ]);
+    }
 
     public function testLoginSuccess()
     {
-        $client = new Client(['base_uri' => 'http://localhost:8080']);
-        $response = $client->post('/api/login', [
+        $response = $this->client->post('/api/login', [
             'json' => [
                 'email' => 'admin@example.com',
                 'password' => 'password1234'
@@ -27,9 +35,8 @@ class LoginAcceptanceTest extends TestCase
 
     public function testLoginFailed()
     {
-        $client = new Client(['base_uri' => 'http://localhost:8080']);
         try {
-            $response = $client->post('/api/login', [
+            $response = $this->client->post('/api/login', [
                 'json' => [
                     'password' => 'test',
                     'email' => 'admin@example.com'

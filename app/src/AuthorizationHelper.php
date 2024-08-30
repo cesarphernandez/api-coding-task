@@ -1,6 +1,6 @@
 <?php
 
-namespace Acceptance;
+namespace App;
 
 use GuzzleHttp\Client;
 
@@ -10,7 +10,7 @@ class AuthorizationHelper
 
     public static function getAuthorizationToken(): string
     {
-        if (self::$token) {
+        if (self::$token !== "") {
             return self::$token;
         }
         $client = new Client([
@@ -24,8 +24,7 @@ class AuthorizationHelper
             ]
         ]);
         $responseData = json_decode($response->getBody(), true);
-        $userData = $responseData['data']['user'];
-        self::$token = $userData['token'];
+        self::$token = $responseData['token'];
         return self::$token;
     }
 
