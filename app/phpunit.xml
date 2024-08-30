@@ -4,9 +4,6 @@
     <testsuite name="Unit Tests">
         <directory>./tests/Unit</directory>
     </testsuite>
-    <!--        <testsuite name="Integration Tests">-->
-    <!--            <directory>./tests/Integration</directory>-->
-    <!--        </testsuite>-->
     <testsuite name="Acceptance Tests">
       <directory>./tests/Acceptance</directory>
     </testsuite>

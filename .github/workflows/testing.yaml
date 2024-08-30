@@ -20,14 +20,10 @@ jobs:
         run: make build
 
       - name: Build and start Docker containers
-        run: docker-compose up -d --build
-
-      - name: Install PHP CodeSniffer and PHPStan
-        run: |
-          docker-compose exec -T php composer install
+        run: make run
 
       - name: Run PHP UnitTests
-        run: docker-compose exec -T php vendor/bin/phpunit --testsuite "Application Test Suite"
+        run: make unit-tests
 
       - name: Stop and remove Docker containers
-        run: docker-compose down
+        run: make down

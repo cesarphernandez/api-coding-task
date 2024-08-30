@@ -65,6 +65,8 @@ build-documentation: ## Construye la documentación del proyecto
 
 tests: ## Ejecuta los tests del proyecto
 	docker-compose exec -T php vendor/bin/phpunit
+unit-tests: ## Ejecuta los tests unitarios del proyecto
+	docker-compose exec -T php vendor/bin/phpunit --testsuite "Unit Tests"
 
 run: ## Ejecuta la aplicación
 	docker-compose up -d --build
