@@ -2,9 +2,48 @@
 
 This is the technical test project for API oriented backends.
 
-## Technical requirements
+# Final Development
+This technical test was developed taking into account and complying with
 
-- [Docker](https://www.docker.com/)
+- [x] Authentication
+- [x] Authorization
+- [x] Cache
+- [x] Documentation
+
+## Authentication
+The authentication was implemented using JWT, the user must authenticate to obtain a token that will be used in the subsequent requests.
+
+## Authorization
+The authorization was implemented using the roles of the users, the roles are: `admin` and `user`, the `admin` role has access to all the endpoints, while the `user` role only has access to the `GET` endpoints.
+
+## Cache
+The cache was implemented using Redis, the cache is used to store the results of the `GET` requests, the cache has a time of 2 minutes.
+
+## Documentation
+The documentation was implemented using Swagger, the documentation can be accessed at the following URL: `http://localhost:8080/docs`
+```bash
+make build-documentation
+```
+This command generates the documentation using Swagger.
+
+## Tests
+The tests were implemented using PHPUnit, the tests cover the main functionalities of the application.
+```bash
+make tests
+```
+This command executes the tests.
+
+## Extra Info
+- The App was development according to Hexagonal Architecture, the App has the following structure
+- The App uses Third Party libraries to Cache, JWT, Http and Swagger
+- All Request has Validation using Validator and DTO classes
+- The App has a Middleware to validate the JWT token
+- The App has a Middleware to validate the Role of the User
+- The App has a Middleware to Cache the GET requests
+- The App and All of endpoints are documented using Swagger and Catch different types of errors
+- This repo has a GitHub Action to run the tests and code quality checks
+- This repo has a pre-commit hook to run the tests
+
 
 ## Build
 
@@ -47,4 +86,7 @@ A light infrastructure is provided with a populated MySQL database with example 
 
 Beyond the requirements of this test we want to see what you can do, feel free to show us your real potential and, the
 most important part, have fun!
+
+
+
 
