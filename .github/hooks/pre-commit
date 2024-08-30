@@ -15,5 +15,5 @@ if [ $TEST_RESULT -ne 0 ]; then
     exit 1
 fi
 
-echo "Tests passed. Proceeding with commit."
+echo "Tests passed. Chuck Norris Crack."
 exit 0
