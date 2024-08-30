@@ -67,11 +67,13 @@ tests: ## Ejecuta los tests del proyecto
 	docker-compose exec -T php vendor/bin/phpunit
 
 run: ## Ejecuta la aplicación
-	docker-compose up --build
-
+	docker-compose up -d --build
 stop: ## Detiene la aplicación
 	docker-compose down
 
 config-hooks: ## Configura los hooks de git
 	cp .github/hooks/pre-commit .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit
+
+code-quality: ## Ejecuta el análisis de calidad de código
+	docker-compose exec -T php vendor/bin/phpcs --standard=PSR1 src/

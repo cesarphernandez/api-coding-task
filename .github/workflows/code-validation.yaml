@@ -25,15 +25,10 @@ jobs:
         run: make build
 
       - name: Build and start Docker containers
-        run: docker-compose up -d --build
-
-      - name: Install PHP CodeSniffer and PHPStan
-        run: |
-          docker-compose exec -T php composer install
-          docker-compose exec -T php composer require --dev squizlabs/php_codesniffer
+        run: make run
 
       - name: Run PHP CodeSniffer
-        run: docker-compose exec -T php vendor/bin/phpcs --standard=PSR1 src/
+        run: make code-quality
 
       - name: Stop and remove Docker containers
-        run: docker-compose down
+        run: make stop
