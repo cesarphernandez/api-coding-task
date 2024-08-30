@@ -71,3 +71,7 @@ run: ## Ejecuta la aplicación
 
 stop: ## Detiene la aplicación
 	docker-compose down
+
+config-hooks: ## Configura los hooks de git
+	cp .github/hooks/pre-commit .git/hooks/pre-commit
+	chmod +x .git/hooks/pre-commit

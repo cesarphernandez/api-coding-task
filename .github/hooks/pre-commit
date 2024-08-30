@@ -1,0 +1,19 @@
+#!/bin/sh
+
+PROJECT_DIR=$(git rev-parse --show-toplevel)
+
+cd "$PROJECT_DIR" || exit 1
+
+echo "Running make tests..."
+
+make tests
+
+TEST_RESULT=$?
+
+if [ $TEST_RESULT -ne 0 ]; then
+    echo "Tests failed. Commit aborted."
+    exit 1
+fi
+
+echo "Tests passed. Proceeding with commit."
+exit 0
