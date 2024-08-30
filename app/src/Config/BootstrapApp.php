@@ -1,13 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\bootstrap;
+namespace App\Config;
 
 use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Exception;
-use Slim\App;
 
 class BootstrapApp
 {
@@ -43,8 +40,7 @@ class BootstrapApp
      * @throws Exception
      */
     static private function getConfigFile() {
-        $path = __DIR__ . '/..';
-        $config = $path . '/config.php';
+        $config = __DIR__ . '/config.php';
 
         if(!file_exists($config)){
             throw new Exception('Not Found config.php file');

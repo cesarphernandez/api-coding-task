@@ -4,46 +4,50 @@ declare(strict_types=1);
 
 namespace App\common\Application\Builder;
 
-use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Response;
 
 class JsonResponseBuilder
 {
-    public static function internalServerErrorRequest(string $message): ResponseInterface
+    public static function internalServerErrorRequest(string $message): Response
     {
         return self::buildResponse(500, $message);
     }
-    public static function badRequest(string $message, array $extraData = []): ResponseInterface
+    public static function badRequest(string $message, array $extraData = []): Response
     {
         return self::buildResponse(400, $message, $extraData);
     }
 
-    public static function notFoundRequest(string $message): ResponseInterface
+    public static function notFoundRequest(string $message): Response
     {
         return self::buildResponse(404, $message);
     }
 
-    public static function unprocessableEntityRequest(string $message): ResponseInterface
+    public static function unprocessableEntityRequest(string $message): Response
     {
         return self::buildResponse(422, $message);
     }
 
-    public static function unauthorizedRequest(string $message, array $extraData = []): ResponseInterface
+    public static function unauthorizedRequest(string $message, array $extraData = []): Response
     {
         return self::buildResponse(401, $message, $extraData);
     }
 
-    public static function unavailableRequest(string $message): ResponseInterface
+    public static function unavailableRequest(string $message): Response
     {
         return self::buildResponse(503, $message);
     }
 
-    public static function successRequest(string $message, array $extraData = []): ResponseInterface
+    public static function successRequest(string $message, array $extraData = []): Response
     {
         return self::buildResponse(200, $message, $extraData);
     }
 
-    private static function buildResponse(int $statusCode, string $message, array $extraData = []): ResponseInterface
+    public static function createdRequest(string $message, array $extraData = []): Response
+    {
+        return self::buildResponse(201, $message, $extraData);
+    }
+
+    private static function buildResponse(int $statusCode, string $message, array $extraData = []): Response
     {
         $response = new Response();
         $payload = array_merge(['message' => $message], $extraData);

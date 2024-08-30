@@ -27,12 +27,12 @@ class UserService
         try {
             $user = $this->userReadRepository->getDetailUser($userDTO->getEmail());
             if (!$user->authenticate($userDTO->getPassword())) {
-                throw new UserNotAuthenticate($userDTO->getEmail());
+                throw UserNotAuthenticate::fromEmail($userDTO->getEmail());
             }
             return $this->authenticator->encode($user);
 
         } catch (PDOException) {
-            throw new UserNotFoundException($userDTO->getEmail());
+            throw UserNotFoundException::fromEmailNotFound($userDTO->getEmail());
         }
 
     }
