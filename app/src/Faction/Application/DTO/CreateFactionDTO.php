@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Faction\Application\DTO;
 
-readonly final class CreateFactionDTO
+final class CreateFactionDTO
 {
     public function __construct(
         private string $name,

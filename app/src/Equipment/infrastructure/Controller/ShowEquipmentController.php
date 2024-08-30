@@ -10,6 +10,61 @@ use Exception;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
+use OpenApi\Attributes as OA;
+
+#[OA\Get(
+    path: '/api/equipment/{id}',
+    summary: 'Retrieve a specific equipment by ID',
+    tags: ['Equipment'],
+    parameters: [
+        new OA\Parameter(
+            name: 'id',
+            description: 'ID of the equipment to retrieve',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'integer'),
+            example: 1
+        ),
+        new OA\Parameter(
+            name: 'Authorization',
+            description: 'Bearer token for authorization',
+            in: 'header',
+            required: true,
+            schema: new OA\Schema(
+                type: 'string',
+                example: 'Bearer <your-token-here>'
+            )
+        )
+    ],
+    responses: [
+        new OA\Response(
+            response: 200,
+            description: 'Equipment retrieved successfully',
+            content: new OA\JsonContent(ref: '#/components/schemas/Equipment')
+        ),
+        new OA\Response(
+            response: 404,
+            description: 'Equipment not found',
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'status', type: 'string', example: 'error'),
+                    new OA\Property(property: 'message', type: 'string', example: 'Equipment not found')
+                ]
+            )
+        ),
+        new OA\Response(
+            response: 500,
+            description: 'Internal server error',
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'status', type: 'string', example: 'error'),
+                    new OA\Property(property: 'message', type: 'string', example: 'Internal server error')
+                ]
+            )
+        )
+    ]
+)]
+
 class ShowEquipmentController
 {
     private IdValidator $validator;

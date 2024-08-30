@@ -13,6 +13,19 @@ use OpenApi\Attributes as OA;
     ],
     type: 'object'
 )]
+
+#[OA\Schema(
+    schema: 'Equipment',
+    description: 'Equipment entity',
+    required: ['name', 'type', 'madeBy'],
+    properties: [
+        new OA\Property(property: 'id', description: 'ID of the equipment', type: 'integer', example: 1),
+        new OA\Property(property: 'name', description: 'Name of the equipment', type: 'string', example: 'Excavator'),
+        new OA\Property(property: 'type', description: 'Type of the equipment', type: 'string', example: 'Heavy Machinery'),
+        new OA\Property(property: 'madeBy', description: 'Manufacturer of the equipment', type: 'string', example: 'Caterpillar'),
+    ],
+    type: 'object'
+)]
 class OpenApiSchemas {
 
 }
