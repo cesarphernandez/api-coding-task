@@ -24,6 +24,7 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        working-directory: ./subdirectory-if-needed
 
       - name: Set up Docker Compose
         run: |
