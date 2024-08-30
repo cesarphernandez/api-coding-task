@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 use App\common\Infrastructure\Controller\DocumentationController;
+use App\Equipment\infrastructure\Controller\CreateEquipmentController;
+use App\Equipment\infrastructure\Controller\DeleteEquipmentController;
+use App\Equipment\infrastructure\Controller\ListEquipmentController;
+use App\Equipment\infrastructure\Controller\ShowEquipmentController;
+use App\Equipment\infrastructure\Controller\UpdateEquipmentController;
 use App\Faction\Infrastructure\Controller\UpdateFactionController;
 use App\User\Infrastructure\Middleware\AuthorizationMiddleware;
 use Slim\App;
@@ -40,6 +45,17 @@ try {
                 $factionsGroupAuthorization->delete('/{id:[0-9]+}', DeleteFactionController::class);
             })->add(new AuthorizationMiddleware(['admin']));
 
+        })->add($authenticatorMiddleware);
+
+        $group->group('/equipments', function (RouteCollectorProxy $equipmentGroup) {
+            $equipmentGroup->get('/{id:[0-9]+}', ShowEquipmentController::class);
+            $equipmentGroup->get('', ListEquipmentController::class);
+
+            $equipmentGroup->group('', function (RouteCollectorProxy $equipmentGroupAuthorization) {
+                $equipmentGroupAuthorization->post('', CreateEquipmentController::class);
+                $equipmentGroupAuthorization->put('/{id:[0-9]+}', UpdateEquipmentController::class);
+                $equipmentGroupAuthorization->delete('/{id:[0-9]+}', DeleteEquipmentController::class);
+            })->add(new AuthorizationMiddleware(['admin']));
         })->add($authenticatorMiddleware);
     });
 } catch (HttpUnauthorizedException $e) {

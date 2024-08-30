@@ -9,9 +9,9 @@ class FactionNotCreatedException extends Exception
 {
     private const DETAIL_NOT_CREATED = 'Faction not created: %s';
 
-    public static function fromFaction(Faction $faction ): self
+    public static function fromName(string $factionName ): self
     {
-        return new self(sprintf(self::DETAIL_NOT_CREATED, $faction->getName()));
+        return new self(sprintf(self::DETAIL_NOT_CREATED, $factionName));
 
     }
 }

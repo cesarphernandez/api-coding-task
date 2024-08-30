@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Faction\Infrastructure\Controller;
 
@@ -50,7 +51,7 @@ class CreateFactionController
     private CreateFactionValidator $validator;
 
     public function __construct(
-        private FactionService $factionService,
+        readonly private FactionService $factionService,
     )
     {
         $this->validator = new CreateFactionValidator();

@@ -3,6 +3,11 @@
 namespace App\bootstrap;
 use App\common\Infrastructure\Persistence\DBConnection;
 use App\common\Infrastructure\Persistence\RedisConnection;
+use App\Equipment\Application\Interfaces\EquipmentServiceInterface;
+use App\Equipment\Application\Services\CacheEquipmentService;
+use App\Equipment\Application\Services\EquipmentService;
+use App\Equipment\Domain\Repository\EquipmentRepositoryInterface;
+use App\Equipment\infrastructure\PDO\MysqlPDOEquipmentRepository;
 use App\Faction\Application\Interfaces\FactionServiceInterface;
 use App\Faction\Application\Services\CacheFactionService;
 use App\Faction\Application\Services\FactionService;
@@ -41,6 +46,12 @@ $container->set(FactionRepositoryInterface::class, function (ContainerInterface 
     );
 });
 
+$container->set(EquipmentRepositoryInterface::class, function (ContainerInterface $container) {
+    return new MysqlPDOEquipmentRepository(
+        $container->get(PDO::class)
+    );
+});
+
 $container->set(AuthenticatorInterface::class, function (ContainerInterface $container) {
     $config = $container->get('settings');
     return new Authenticator(
@@ -55,6 +66,21 @@ $container->set(UserService::class, function (ContainerInterface $container) {
     return new UserService(
         $container->get(UserReadRepositoryInterface::class),
         $container->get(AuthenticatorInterface::class)
+    );
+});
+
+$container->set(EquipmentService::class, function (ContainerInterface $container) {
+    return new EquipmentService(
+        $container->get(EquipmentRepositoryInterface::class)
+    );
+});
+
+$container->set(EquipmentServiceInterface::class, function (ContainerInterface $container) {
+    $service = $container->get(EquipmentService::class);
+    return new CacheEquipmentService(
+        $service,
+        $container->get(Client::class),
+        $container->get('settings')['redis']['ttl']
     );
 });
 

@@ -8,7 +8,7 @@ use App\Faction\Application\Interfaces\FactionServiceInterface;
 use App\Faction\Domain\Faction;
 use Predis\Client;
 
-class CacheFactionService implements FactionServiceInterface
+readonly class CacheFactionService implements FactionServiceInterface
 {
     public function __construct(
         private FactionService $factionService,

@@ -69,7 +69,7 @@ class MysqlPDOFactionRepository implements FactionRepositoryInterface
         ]);
 
         if ($stmt->rowCount() === 0) {
-            throw new FactionNotCreatedException('Faction not created');
+            throw FactionNotCreatedException::fromName($faction->getName());
         }
 
         $faction->setId((int)$this->connection->lastInsertId());
