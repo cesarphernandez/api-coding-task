@@ -1,2 +1,6 @@
-.*
+.gitignore
+.idea/
+.phpunit.result.cache
+.phpunit.cache
+.DS_Store
 vendor

@@ -1,0 +1,55 @@
+name: Code Quality Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Build Docker containers
+        run: docker-compose build
+        if: success()
+
+      - name: Start Docker containers
+        run: docker-compose up -d
+        if: success()
+
+      - name: Run PHP CodeSniffer
+        run: docker-compose run --rm php vendor/bin/phpcs --standard=PSR12 src/
+        if: success()
+
+      - name: Run PHPStan
+        run: docker-compose run --rm php vendor/bin/phpstan analyse src/ --level=max
+        if: success()
+
+      - name: Run Psalm
+        run: docker-compose run --rm php vendor/bin/psalm --show-info=true
+        if: success()
+
+      - name: Stop and remove Docker containers
+        if: always()
+        run: docker-compose down

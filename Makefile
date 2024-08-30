@@ -62,3 +62,12 @@ composer-require-dev: ## Añade nuevas dependencias de desarrollo
 
 build-documentation: ## Construye la documentación del proyecto
 	docker run --rm -v ${PWD}/app:/app -w /app $(IMAGE_NAME):$(IMAGE_TAG_DEV) ./vendor/bin/openapi src -o public/openapi.json
+
+tests: ## Ejecuta los tests del proyecto
+	docker-compose exec -T php vendor/bin/phpunit
+
+run: ## Ejecuta la aplicación
+	docker-compose up --build
+
+stop: ## Detiene la aplicación
+	docker-compose down
