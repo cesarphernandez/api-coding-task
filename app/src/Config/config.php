@@ -25,7 +25,7 @@ return [
             'host' => 'redis',
             'port' => 6379,
             'scheme' => 'tcp',
-            'ttl' => 3600
+            'ttl' => 120
         ]
     ]
 ];
